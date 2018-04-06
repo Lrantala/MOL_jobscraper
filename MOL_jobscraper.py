@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import os
 from selenium import webdriver
+import time
 
 '''
 The idea is to open the from TE-toimisto which contain interesting job advertisements.
@@ -13,6 +14,7 @@ def get_website_contents(website_address):
     """This function retrieves and returns the contents of the
     website that is passed to it as an argument."""
     browser.get(website_address)
+    time.sleep(1)
     website_contents = browser.page_source
     return website_contents
 
@@ -28,7 +30,7 @@ def get_website_links(website_address):
         for link in links:
             link_list.append(link["href"])
             # print(link["href"])
-    print (link_list)
+    return link_list
 
 def get_information_between_tags(contents, divtag, ptag):
     """This function gets the text between certain tags"""
@@ -56,6 +58,7 @@ def write_website_to_file(contents, filename):
             os.makedirs(filepath)
         with open(os.path.join(filepath, filename), "wb") as file:
             file.write(write_contents_bytes)
+            print(filepath + filename + " saved")
     except IOError as exception:
         print("Couldn't save the file. Encountered an error: %s" % exception)
 
@@ -85,23 +88,17 @@ if __name__ == "__main__":
     address_sahkotekniikan_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=2151&announced=0&leasing=0&english=false&sort=1"
     address_elektronikan_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=2152&announced=0&leasing=0&english=false&sort=1"
     browser = webdriver.PhantomJS("/home/eewijet/PhantomJS/bin/phantomjs")
-    address = "https://paikat.te-palvelut.fi/tpt/?professions=2153&announced=0&leasing=0&english=false&sort=1"
+    address_start = "https://paikat.te-palvelut.fi"
     # address = "https://paikat.te-palvelut.fi/tpt/9534707"
     filename = "tyo2.txt"
-    get_website_links(address)
-
-
-    # if address is None:
-    #     print_help()
-    # else:
-    #     raw_content = get_website_contents(address)
-    #     if raw_content is None:
-    #         print("Website could not be loaded or does not exist.")
-    #     else:
-    #         content = get_information_between_tags(raw_content, "detailAdName", "detailText")
-    #     if content is None:
-    #         print("There is nothing to be saved.")
-    #     else:
-    #         if filename is not None:
-    #             write_website_to_file(content, filename)
-    #             print("Wrote to file %s" % filename)
+    weblinks = get_website_links(address_elektronikan_erityisasiantuntijat)
+    n = 0
+    for link in weblinks:
+        filename = link[5:12] + ".txt"
+        address = address_start + link
+        contents = get_website_contents(address)
+        information = get_information_between_tags(contents, "detailAdName", "detailText")
+        write_website_to_file(information, filename)
+        n = n+1
+    print("Total ads: " + str(n))
+    
