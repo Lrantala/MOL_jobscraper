@@ -101,4 +101,5 @@ if __name__ == "__main__":
         write_website_to_file(information, filename)
         n = n+1
     print("Total ads: " + str(n))
-    
+    browser.close()
+    browser.quit()
