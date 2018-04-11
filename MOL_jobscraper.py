@@ -48,12 +48,12 @@ def get_information_between_tags(contents, divtag, ptag):
     return full_text
 
 
-def write_website_to_file(contents, filename):
+def write_website_to_file(contents, filename, pathname):
     """This function writes the website contents to a file
     as bytes."""
     write_contents_bytes = bytearray(contents, "utf-8")
     try:
-        filepath = os.path.join("./jobsfiles/")
+        filepath = os.path.join("./save/" + pathname + "/")
         if not os.path.exists(filepath):
             os.makedirs(filepath)
         with open(os.path.join(filepath, filename), "wb") as file:
@@ -82,24 +82,33 @@ def print_help():
 
 
 if __name__ == "__main__":
-    # This is the main branch, and the three following are individual fileds undir it.
-    address_sahkoteknologian_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=215&announced=0&leasing=0&english=false&sort=1"
-    address_ict_alan_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=2153&announced=0&leasing=0&english=false&sort=1"
-    address_sahkotekniikan_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=2151&announced=0&leasing=0&english=false&sort=1"
-    address_elektronikan_erityisasiantuntijat = "https://paikat.te-palvelut.fi/tpt/?professions=2152&announced=0&leasing=0&english=false&sort=1"
+
+    address_tieto_ja_viestintateknologian_johtajat = ["Tieto_ja_viestintajohtajat", "https://paikat.te-palvelut.fi/tpt/?professions=1330&announced=0&leasing=0&english=false&sort=1"]
+    address_informaatio_ja_tietoliikenneteknologian_asiantuntijat = ["Info_ja_tietoliiktekn_asiantunt", "https://paikat.te-palvelut.fi/tpt/?professions=35&announced=0&leasing=0&english=false&sort=1"]
+    # This is the main branch, and the three following this one (ICT-alan, shakotekn., and elektroniikan) are individual files under it.
+    address_sahkoteknologian_erityisasiantuntijat = ["Sahkoteknologian_erityisasiantunt", "https://paikat.te-palvelut.fi/tpt/?professions=215&announced=0&leasing=0&english=false&sort=1"]
+    address_ict_alan_erityisasiantuntijat = ["ICT_alan_asiantunt", "https://paikat.te-palvelut.fi/tpt/?professions=2153&announced=0&leasing=0&english=false&sort=1"]
+    address_sahkotekniikan_erityisasiantuntijat = ["Sahkotekniikan_asiantunt", "https://paikat.te-palvelut.fi/tpt/?professions=2151&announced=0&leasing=0&english=false&sort=1"]
+    address_elektroniikan_erityisasiantuntijat = ["Elektroniikan_asiantunt", "https://paikat.te-palvelut.fi/tpt/?professions=2152&announced=0&leasing=0&english=false&sort=1"]
+
     browser = webdriver.PhantomJS("/home/eewijet/PhantomJS/bin/phantomjs")
     address_start = "https://paikat.te-palvelut.fi"
-    # address = "https://paikat.te-palvelut.fi/tpt/9534707"
-    filename = "tyo2.txt"
-    weblinks = get_website_links(address_elektronikan_erityisasiantuntijat)
-    n = 0
+    address = address_tieto_ja_viestintateknologian_johtajat
+    pathname = address[0]
+    weblinks = get_website_links(address[1])
+    link_counter = 0
+    for i in weblinks:
+        link_counter += 1
+    print("Total number of ad links: " + str(link_counter))
+    scrape_counter = 0
     for link in weblinks:
         filename = link[5:12] + ".txt"
-        address = address_start + link
-        contents = get_website_contents(address)
+        link_address = address_start + link
+        contents = get_website_contents(link_address)
         information = get_information_between_tags(contents, "detailAdName", "detailText")
-        write_website_to_file(information, filename)
-        n = n+1
-    print("Total ads: " + str(n))
+        write_website_to_file(information, filename, pathname)
+        scrape_counter += 1
+    print("Total number of ad links: " + str(link_counter))
+    print("Total ads scraped: " + str(scrape_counter))
     browser.close()
     browser.quit()
