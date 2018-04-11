@@ -10,6 +10,8 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 /jobsfiles/
+*.zip
+*.log
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
