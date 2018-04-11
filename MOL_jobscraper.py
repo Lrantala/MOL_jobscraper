@@ -18,6 +18,7 @@ def get_website_contents(website_address):
     website_contents = browser.page_source
     return website_contents
 
+
 def get_website_links(website_address):
     """This function retrieves and returns all the links of the
     website that is passed to it as an argument."""
@@ -31,6 +32,7 @@ def get_website_links(website_address):
             link_list.append(link["href"])
             # print(link["href"])
     return link_list
+
 
 def get_information_between_tags(contents, divtag, ptag):
     """This function gets the text between certain tags"""
@@ -61,24 +63,6 @@ def write_website_to_file(contents, filename, pathname):
             print(filepath + filename + " saved")
     except IOError as exception:
         print("Couldn't save the file. Encountered an error: %s" % exception)
-
-
-def read_arguments(arguments):
-    """This reads the arguments passed to the program and returns
-    the latter representing the website address. If no address is
-    provided, the function returns None."""
-    if len(arguments) == 3:
-        return arguments[1], arguments[2]
-    elif len(arguments) == 2:
-        return arguments[1], None
-    else:
-        return None, None
-
-
-def print_help():
-    """This function prints help text to instruct user how to use
-    this scraping program."""
-    print("\nThis is a simple program for scraping job advertisements from TE-toimisto's website.")
 
 
 if __name__ == "__main__":
