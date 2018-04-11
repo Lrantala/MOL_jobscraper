@@ -92,7 +92,6 @@ if __name__ == "__main__":
         information = get_information_between_tags(contents, "detailAdName", "detailText")
         write_website_to_file(information, filename, pathname)
         scrape_counter += 1
-    print("Total number of ad links: " + str(link_counter))
-    print("Total ads scraped: " + str(scrape_counter))
+    print("Total ads scraped: " + str(scrape_counter) + "/" + str(link_counter))
     browser.close()
     browser.quit()
